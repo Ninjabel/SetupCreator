@@ -1,0 +1,4 @@
+:host{
+    @apply flex flex-col mx-auto w-11/12 p-10 shadow-xl border rounded-2xl mb-8;
+    max-height: 50rem;
+}

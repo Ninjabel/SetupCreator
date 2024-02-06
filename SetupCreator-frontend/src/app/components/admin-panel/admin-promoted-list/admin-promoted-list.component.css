@@ -1,0 +1,6 @@
+:host {
+    @apply h-full
+}
+.scroll-categories-admin-container-height{
+    height: calc(100% - 16.5%);
+}

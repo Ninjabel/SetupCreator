@@ -1,0 +1,9 @@
+<div class="flex justify-between h-full">
+  <div class="w-2/3 flex flex-col mr-4">
+    <app-category-picker class="h-2/3" [categories]="categories | async" (categoryPicked)="categoryPicked($event)">
+    </app-category-picker>
+    <app-summary></app-summary>
+  </div>
+  <app-components-picker [category]="pickedCategory" [parts]="pickedCategory? pickedCategory.products : []"
+                         [headerText]="'Wybierz części:'"></app-components-picker>
+</div>

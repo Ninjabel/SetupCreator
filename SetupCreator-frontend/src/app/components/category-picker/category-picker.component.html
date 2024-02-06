@@ -1,0 +1,14 @@
+<div *ngIf="loading" class="w-full flex justify-center items-center animate-spin">
+  <span class="loader"></span>
+</div>
+<tui-scrollbar [hidden]="true" class="scroll-container-height">
+  <div *ngIf="categories" class="h-full mb-4 grid gap-4 grid-cols-2 auto-rows-min">
+    <div *ngFor="let category of categories"
+         (click)="pickCategory(category)"
+         class="relative border rounded-2xl w-full h-28 flex flex-grow-0 hover:cursor-pointer hover:shadow"
+         [class.bg-slate-200]="category.id===pickedCategory?.id">
+      <p class="text-xl m-auto">{{ category.name }}</p>
+    </div>
+  </div>
+</tui-scrollbar>
+

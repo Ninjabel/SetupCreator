@@ -1,0 +1,24 @@
+<div class="flex h-full">
+  <div *ngIf="loading" class="w-full h-full flex justify-center items-center animate-spin">
+    <span class="loader"></span>
+  </div>
+  <div *ngIf="!loading" class="w-1/3 rounded-2xl border p-4 overflow-hidden">
+    <h2 class="text-lg mb-4">Twoje zestawy:</h2>
+    <tui-scrollbar class="scroll-container-height">
+      <div class="w-full inline-grid grid-cols-1 gap-4 overflow-hidden">
+        <div *ngFor="let setup of setups"
+             (click)="pickSetup(setup)"
+             class="px-3 h-28 border rounded-2xl flex flex-col justify-center items-center hover:shadow hover:cursor-pointer">
+          <span class="text-2xl truncate w-11/12 text-center">{{setup.name}}</span>
+        </div>
+      </div>
+    </tui-scrollbar>
+
+  </div>
+  <div class="w-2/3 h-full ml-4 rounded-2xl border p-4">
+    <div *ngIf="!currentSetup" class="flex justify-center items-center h-full">
+      <h2 class="text-lg">Wybierz zestaw</h2>
+    </div>
+    <app-setup (actionFinished)="propagateChanges()" *ngIf="currentSetup" [setup]="currentSetup"></app-setup>
+  </div>
+</div>

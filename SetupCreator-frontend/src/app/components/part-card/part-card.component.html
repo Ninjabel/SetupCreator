@@ -1,0 +1,27 @@
+<div *ngIf="counterVisible" class="absolute right-2.5">
+  <div class="select-none relative top-2 flex w-full">
+    <tui-svg class="hover:cursor-pointer" (click)="addPart()" src="tuiIconPlus"></tui-svg>
+    <span class="text-lg font-bold">{{ counter }}</span>
+    <tui-svg [class.hover:cursor-pointer]="counter>0" (click)="deletePart()" src="tuiIconMinus"></tui-svg>
+  </div>
+</div>
+<div class="w-full h-full flex justify-center items-center">
+  <div class="w-full flex justify-center">
+    <img alt="part photo" class="rounded mr-4 w-14 h-14" *ngIf="part.photoUrl" src="{{part.photoUrl}}">
+    <span class="text-2xl mr-1 my-auto truncate" [tuiHint]="nameTooltip">
+      <a *ngIf="part.shopUrl; else partName" class="underline" [href]="part.shopUrl">{{ part.name }}</a>
+    </span>
+    <span class="text-xl self-center">{{ convertPrice(part.price) }}</span>
+  </div>
+</div>
+
+
+<ng-template #partName>
+  <p class="truncate"
+     [tuiHint]="nameTooltip">
+    {{ part.name }}
+  </p>
+</ng-template>
+<ng-template #nameTooltip>
+  {{ part.name }}
+</ng-template>

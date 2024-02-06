@@ -1,0 +1,32 @@
+<div class="w-full h-72 rounded-lg flex flex-col items-center justify-around ">
+  <h1 class="text-2xl">{{login ? 'Zaloguj się' : 'Rejestracja'}}</h1>
+  <div class="flex flex-col w-4/5 rounded-lg">
+    <form [formGroup]="formGroup" class="flex flex-col items-center">
+      <tui-input class="mb-3 w-full" formControlName="email">
+        Adres email
+        <input
+            tuiTextfield
+            type="email"
+        />
+      </tui-input>
+      <tui-input-password class="mb-5 w-full" formControlName="password">
+        Hasło
+        <input
+            tuiTextfield
+            type="password"
+        />
+      </tui-input-password>
+      <button
+          tuiButton
+          type="submit"
+          appearance="primary"
+          class="tui-space_bottom-3"
+          [showLoader]="loading"
+          (click)="sendForm()"
+      >
+        {{login ? 'Zaloguj się' : 'Zarejestruj się'}}
+      </button>
+    </form>
+    <span *ngIf="error" class="text-red-700 mx-auto">{{error}}</span>
+  </div>
+</div>

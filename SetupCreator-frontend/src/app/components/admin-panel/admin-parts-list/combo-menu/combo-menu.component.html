@@ -1,0 +1,28 @@
+
+<tui-hosted-dropdown
+    tuiDropdownAlign="left"
+    [content]="dropdown"
+    [sided]="true"
+    [(open)]="open"
+>
+  <tui-svg class="cursor-pointer" src="tuiIconMoreVerticalLarge"></tui-svg>
+</tui-hosted-dropdown>
+<ng-template
+    #dropdown
+    let-close="close"
+>
+  <tui-data-list>
+      <button
+          tuiOption
+          (click)="deletePart()"
+      >
+        Usuń
+      </button>
+      <button
+          tuiOption
+          (click)="addToPromoted()"
+      >
+        Dodaj do polecanych
+      </button>
+  </tui-data-list>
+</ng-template>

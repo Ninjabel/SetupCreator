@@ -1,0 +1,7 @@
+:host {
+    @apply mb-4 w-full flex flex-col
+}
+
+.add-category-button[tuiButton]{
+    @apply h-28 mt-auto
+}

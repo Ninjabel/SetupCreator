@@ -1,0 +1,7 @@
+:host {
+    @apply px-3 h-28 border rounded-2xl hover:shadow
+}
+
+:host:last-of-type {
+    margin-bottom: 0.20rem;
+}

@@ -1,0 +1,57 @@
+<div class="w-full rounded-lg flex flex-col items-center justify-around ">
+  <h1 class="text-2xl mb-4">Dodajesz część</h1>
+  <div class="flex flex-col w-4/5 rounded-lg">
+    <form [formGroup]="formGroup" class="flex flex-col items-center">
+      <tui-input class="mb-4 w-full" formControlName="name">
+        Nazwa produktu
+        <input
+            tuiTextfield
+            type="text"
+        />
+      </tui-input>
+      <tui-input class="mb-4 w-full" formControlName="ceneoId">
+        Ceneo Id
+        <input
+            tuiTextfield
+            type="text"
+        />
+      </tui-input>
+
+      <tui-select
+          *tuiLet="categories | async as items"
+          class="w-full mb-4"
+          [valueContent]="items ? stringify(items) : loading"
+          formControlName="categoryId"
+      >
+        Wybierz Kategorię
+        <ng-template tuiDataList>
+          <tui-data-list *ngIf="items; else loading">
+            <button
+                *ngFor="let item of items"
+                tuiOption
+                [value]="item.id"
+            >
+              {{ item.name }}
+            </button>
+          </tui-data-list>
+        </ng-template>
+        <ng-template #loading>
+          <tui-loader class="tui-space_vertical-3 loader"></tui-loader>
+        </ng-template>
+      </tui-select>
+
+
+      <button
+          tuiButton
+          type="submit"
+          appearance="primary"
+          class="tui-space_bottom-3"
+          [showLoader]="loading"
+          (click)="addProduct()"
+      >
+        Dodaj produkt do kategorii
+      </button>
+    </form>
+    <span *ngIf="error" class="text-red-700 mx-auto">{{ error }}</span>
+  </div>
+</div>

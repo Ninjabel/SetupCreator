@@ -1,0 +1,11 @@
+<tui-root>
+  <tui-scrollbar>
+    <div class="w-screen h-screen flex flex-col">
+      <app-header></app-header>
+      <div class="mx-auto my-8 w-11/12 h-5/6 p-10 shadow-xl border rounded-2xl">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <app-promoted-parts *ngIf="creatorView"></app-promoted-parts>
+  </tui-scrollbar>
+</tui-root>

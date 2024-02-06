@@ -1,0 +1,60 @@
+<h1 class="text-2xl cursor-pointer" routerLink="creator">Setup creator</h1>
+<div class="flex">
+  <div class="mr-2">
+    <button
+        tuiIconButton
+        type="button"
+        routerLink="help"
+        appearance="flat">
+      <tui-svg src="tuiIconHelpCircleLarge"/>
+    </button>
+  </div>
+  <div *ngIf="!userLogged">
+    <button class="mr-3"
+            appearance="outline"
+            tuiButton
+            type="button"
+            (click)="showFormDialog(true)"
+    >
+      Zaloguj
+    </button>
+    <button
+        appearance="primary"
+        tuiButton
+        type="button"
+        (click)="showFormDialog(false)"
+    >
+      Rejestracja
+    </button>
+  </div>
+  <div *ngIf="userLogged">
+    <button
+        routerLink="creator"
+        class="mr-3"
+        appearance="secondary"
+        tuiButton>
+      Dodaj konfiguracje
+    </button>
+    <button
+      routerLink="my-setups"
+      class="mr-3"
+      appearance="secondary"
+      tuiButton>
+      Zapisane konfiguracje
+    </button>
+    <button
+        *ngIf="userRole===UserRole.ADMIN"
+        routerLink="admin-panel"
+        tuiButton
+        class="mr-3"
+        appearance="primary">
+      Panel Administratora
+    </button>
+    <button
+        (click)="logout()"
+        tuiButton
+        appearance="accent">
+      Wyloguj
+    </button>
+  </div>
+</div>

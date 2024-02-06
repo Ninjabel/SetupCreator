@@ -1,0 +1,55 @@
+<div class="h-min mb-4 flex justify-between">
+  <div class="flex items-center">
+    <tui-tabs [(activeItemIndex)]="activeTabIndex">
+      <button
+          routerLink="categories"
+          tuiTab
+      >
+        Kategorie
+      </button>
+      <button
+          routerLink="parts"
+          tuiTab
+      >
+        Części
+      </button>
+      <button
+          routerLink="promoted"
+          tuiTab
+      >
+        Polecane
+      </button>
+    </tui-tabs>
+    <app-search class="ml-8"/>
+  </div>
+  <div>
+    <button tuiButton
+            *ngIf="activeTabIndex===0"
+            appearance="whiteblock-active"
+            class="w-full add-category-button"
+            type="button"
+            (click)="addCategory()">
+      Dodaj Kategorię
+    </button>
+    <div class="flex w-1/3" *ngIf="activeTabIndex===1">
+      <button tuiButton
+              appearance="whiteblock-active"
+              class="mr-4 add-category-button"
+              type="button"
+              (click)="addPart()">
+        Dodaj Część
+      </button>
+      <button tuiButton
+              appearance="whiteblock-active"
+              class="add-category-button"
+              type="button"
+              [showLoader]="loading"
+              (click)="refreshPrices()">
+        Pobierz ceny
+      </button>
+    </div>
+  </div>
+</div>
+<router-outlet>
+</router-outlet>
+

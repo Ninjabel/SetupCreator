@@ -1,0 +1,28 @@
+<div *ngIf="!category; else picker" class="w-full h-full flex justify-center items-center">
+  <h2 class="text-lg">Wybierz kategorię</h2>
+</div>
+
+<ng-template #picker>
+  <div class="w-full flex justify-between mb-4 items-center">
+    <h2 class="text-lg">{{ headerText }}</h2>
+    <tui-input
+        class="w-1/2"
+        [tuiTextfieldSize]="'s'"
+        tuiTextfieldIconLeft="tuiIconSearch"
+        [formControl]="search"
+    >
+    </tui-input>
+  </div>
+  <ng-container *ngIf="!addProductComponentVariant">
+    <ng-template [ngTemplateOutlet]="scrollableList"></ng-template>
+  </ng-container>
+</ng-template>
+
+<ng-template #scrollableList>
+  <tui-scrollbar class="scroll-container-height">
+    <div class="w-full inline-grid grid-cols-1 gap-4 overflow-hidden">
+      <app-part-card *ngFor="let part of filteredParts" [part]="part"
+                     [counterVisible]="!addProductComponentVariant"></app-part-card>
+    </div>
+  </tui-scrollbar>
+</ng-template>

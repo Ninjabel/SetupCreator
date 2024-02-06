@@ -1,0 +1,54 @@
+<h2 class="text-lg">Podsumowanie:</h2>
+<tui-scrollbar class="overflow-hidden h-full">
+  <div class="flex flex-col items-start">
+    <div class="flex w-full" *ngFor="let part of summary">
+      <ng-template #nameTooltip>
+        {{ part.name }}
+      </ng-template>
+
+      <div class="flex w-11/12">
+        <img alt="part photo" class="rounded mr-4 w-14 h-14" *ngIf="part.photoUrl" src="{{part.photoUrl}}">
+        <span class="text-xl my-auto truncate max-w-2/4" [tuiHint]="nameTooltip">
+          {{ part.name }}
+        </span>
+        <span class="text-xl my-auto mr-4 flex-none">
+          - {{ convertPrice(part.price) ?? 'cena nieznana' }}
+        </span>
+        <div class="flex items-center" *ngIf="part.shopUrl">
+          <a [href]="part.shopUrl" target="_blank" tuiButton appearance="flat">
+            Najtaniej
+          </a>
+        </div>
+      </div>
+      <div class="my-auto ml-4">
+        <tui-svg class="text-red-700 cursor-pointer" src="tuiIconTrash2Large" (click)="removeFromSetup(part)"></tui-svg>
+      </div>
+    </div>
+  </div>
+</tui-scrollbar>
+<div class="flex justify-end mb-2">
+  <span class="text-xl">Łącznie: {{ convertPrice(setupPrice) ?? 0 }}</span>
+</div>
+<div>
+  <form class="flex justify-around">
+    <tui-input name="setupName" class="w-full mr-4" [(ngModel)]="setupName">Nazwa zestawu</tui-input>
+    <button tuiButton
+            [showLoader]="loading"
+            [tuiHint]="isSaveEnable()? tooltip : ''"
+            [tuiHintShowDelay]="200"
+            [tuiHintAppearance]="'onDark'"
+            [disabled]="isSaveEnable()"
+            (click)="saveSetup()">
+      Zapisz
+    </button>
+  </form>
+</div>
+
+<ng-template #tooltip>
+  <p class="mb-1">Aby zapisać zestaw musisz spełnić wymagania:</p>
+  <ul class="tui-list tui-list_small">
+    <li class="tui-list__item">Posiadać konto i być zalogowanym</li>
+    <li class="tui-list__item">Zestaw nie może być pusty</li>
+    <li class="tui-list__item">Zestaw musi mieć nazwę</li>
+  </ul>
+</ng-template>

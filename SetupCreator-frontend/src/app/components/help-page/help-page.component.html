@@ -1,0 +1,67 @@
+<tui-scrollbar class="h-full">
+  <div class="w-full">
+    <h2 class="text-2xl mb-4 font-bold text-center">Pomoc</h2>
+    <p class="text-md mb-10">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci asperiores blanditiis
+      consequuntur deleniti dolore excepturi exercitationem, ipsum iure laboriosam laudantium, maiores maxime nam nemo
+      nesciunt optio perspiciatis porro provident quidem rerum saepe sequi vel veniam voluptas. Aliquid asperiores autem
+      deleniti dolores earum eum eveniet excepturi fugiat itaque iusto laborum, magnam nobis obcaecati officia quis quo
+      quod quos reiciendis sapiente sed sit tempore totam vel. Alias architecto atque beatae dicta dolorem ea esse eum
+      facilis fuga incidunt iusto laboriosam, molestiae odit perspiciatis qui rem repellat reprehenderit tempore vitae
+      voluptas voluptate voluptates voluptatum! Aliquam architecto commodi dolorum eligendi error ex excepturi
+      exercitationem fugit harum hic ipsum laudantium, molestiae, necessitatibus nulla odit placeat quae quaerat
+      quibusdam ratione rem sed similique, vel vitae voluptas voluptatibus. Eius molestiae nisi nulla odit pariatur quae
+      quo repellendus, saepe sit tempora. Accusamus aspernatur commodi dolorem doloremque iste labore maiores minus
+      molestias, optio quisquam velit vitae voluptatem? Atque aut delectus doloribus earum est exercitationem, id
+      incidunt ipsam iusto, maiores maxime molestiae non possimus quaerat quo rem rerum totam unde velit vitae.
+      Accusantium, at ipsam natus nihil nulla quam qui repellendus sint vel voluptatibus. Magni minus nesciunt sunt. Ad
+      animi consectetur dolore dolorum, facere fugit in inventore iure magni maiores minus qui tempore, tenetur!
+      Accusamus accusantium, animi cum dolore eaque harum, hic, inventore minima nostrum obcaecati odio quasi sunt vel.
+      Alias commodi maxime nulla voluptatum? Consequuntur illo labore, laboriosam necessitatibus nesciunt odio quaerat
+      saepe voluptates! Architecto assumenda atque consectetur corporis deleniti distinctio ducimus ea eaque ex
+      excepturi minus officia pariatur perferendis quasi, rem, repellendus temporibus velit voluptatem voluptates
+      voluptatum. Accusantium delectus deserunt ducimus eligendi facere, quas repellat saepe. Deleniti ducimus earum eos
+      officiis, perferendis quas quis? Aperiam cum ipsam minima veritatis. Asperiores consequuntur delectus, deserunt
+      harum labore molestias neque numquam officiis placeat quas quidem rem suscipit totam unde veniam! Laboriosam?</p>
+    <section class="bg-white">
+      <div class="py-8 px-4 mx-auto max-w-screen-md">
+        <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white">Skontaktuj się
+          z nami</h2>
+        <p class="mb-8 lg:mb-16 font-light text-center text-gray-500 dark:text-gray-400 sm:text-xl">Masz problem z
+          używaniem aplikacji? Może chcesz się podzielić swoimi doświadczeniami? Napisz do nas!</p>
+        <form action="#" class="space-y-8" [formGroup]="formGroup">
+          <div>
+            <tui-input formControlName="email">
+              Twój email
+              <input type="email" id="email" tuiTextfield
+                     placeholder="name@mail.com" required>
+            </tui-input>
+          </div>
+          <div>
+            <tui-input formControlName="subject">
+              Temat
+              <input type="text" id="subject" tuiTextfield
+                     placeholder="Daj znać jak możemy pomóc" required>
+            </tui-input>
+          </div>
+          <div class="sm:col-span-2">
+            <tui-textarea
+                formControlName="message"
+                class="tui-space_top-4"
+                [expandable]="true"
+            >
+              Zostaw wiadomość!
+            </tui-textarea>
+          </div>
+          <button type="submit"
+                  tuiButton
+                  (click)="sendForm()"
+                  [showLoader]="loading"
+                  appearance="primary">
+            Wyślij
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+</tui-scrollbar>
+

@@ -1,0 +1,20 @@
+<div class="flex justify-center items-center h-1/6 border-b pb-4 mb-4 relative">
+  <h2 class="text-3xl truncate w-10/12 text-center">{{ setup.name }}</h2>
+  <tui-svg (click)="deleteSetup(setup.id)" class="absolute right-1.5 text-red-700 cursor-pointer" src="tuiIconTrash2Large"></tui-svg>
+</div>
+<div class="w-full h-4/6 flex flex-col border-b mb-4">
+  <h2 class="mr-auto text-2xl mb-4">Wybrane cześci:</h2>
+  <tui-scrollbar class="">
+    <div *ngFor="let part of setup.products" class="flex justify-start h-full">
+      <p class="text-xl mr-4 mb-2">{{ part.name }} - {{ convertPrice(part.price) }}</p>
+      <div class="flex items-center" *ngIf="part.shopImage && part.shopUrl">
+        <a tuiLink [href]="part.shopUrl">
+          <img class="w-16 h-8 rounded" [src]="part.shopImage" alt="shopImg">
+        </a>
+      </div>
+    </div>
+  </tui-scrollbar>
+</div>
+<div class="w-full flex">
+  <h2 class="text-2xl">Łącznie: {{ convertPrice(this.overallPrice) ?? '0' }}</h2>
+</div>

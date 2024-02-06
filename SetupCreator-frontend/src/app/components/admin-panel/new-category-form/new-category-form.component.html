@@ -1,0 +1,25 @@
+<div class="w-full rounded-lg flex flex-col items-center justify-around ">
+  <h1 class="text-2xl mb-4">Dodaj kategorię</h1>
+  <div class="flex flex-col w-4/5 rounded-lg">
+    <form [formGroup]="formGroup" class="flex flex-col items-center">
+      <tui-input class="mb-3 w-full" formControlName="name">
+        Nazwa kategorii
+        <input
+            tuiTextfield
+            type="text"
+        />
+      </tui-input>
+      <button
+          tuiButton
+          type="submit"
+          appearance="primary"
+          class="tui-space_bottom-3"
+          [showLoader]="loading"
+          (click)="addCategory()"
+      >
+        Dodaj kategorię
+      </button>
+    </form>
+    <span *ngIf="error" class="text-red-700 mx-auto">{{ error }}</span>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="w-full text-lg grid grid-cols-3 grid-rows-1 mb-4">
+  <div class="ml-4">Nazwa</div>
+  <div>Ilość Części</div>
+</div>
+<tui-scrollbar class="scroll-categories-admin-container-height">
+  <div *ngFor="let category of filteredCategories"
+       class="border mb-4 rounded-2xl w-full h-28 grid grid-cols-3 hover:shadow">
+    <p class="text-xl my-auto ml-4">{{ category.name }}</p>
+    <div class="col-span-2 my-auto flex justify-between">
+      <p class="text-xl">{{ category.products.length }}</p>
+      <div class="mr-4">
+        <tui-svg (click)="deleteCategory(category)" class="text-red-700 cursor-pointer" src="tuiIconTrash2Large"></tui-svg>
+      </div>
+    </div>
+  </div>
+</tui-scrollbar>
