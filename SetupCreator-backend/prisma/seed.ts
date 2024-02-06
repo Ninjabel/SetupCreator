@@ -1,6 +1,60 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
+import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-const prisma = new PrismaClient();
+dotenv.config();
+const databaseUrl = process.env.DATABASE_URL;
+const refreshSecret = process.env.REFRESH_SECRET;
+
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: databaseUrl,
+    },
+  },
+});
+
+const users = [
+  { email: "user@example.com", password: "password123", role: Role.USER },
+  { email: "admin@example.com", password: "adminpassword", role: Role.ADMIN },
+  { email: "user2@example.com", password: "password123", role: Role.USER },
+  { email: "user3@example.com", password: "password123", role: Role.USER },
+  { email: "user4@example.com", password: "password123", role: Role.USER },
+];
+
+const seedUsersAndRefreshTokens = async () => {
+  for (const user of users) {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const createdUser = await prisma.user.create({
+      data: {
+        email: user.email,
+        password: hashedPassword,
+        role: user.role,
+      },
+    });
+
+    console.log(`Created user: ${createdUser.email}`);
+
+    const refreshToken = jwt.sign(
+      { id: createdUser.id, role: createdUser.role },
+      refreshSecret!,
+      { expiresIn: "7d" }
+    );
+
+    const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await prisma.refreshToken.create({
+      data: {
+        userId: createdUser.id,
+        token: refreshToken,
+        expiresAt: expirationDate,
+      },
+    });
+
+    console.log(`Created refresh token for user: ${createdUser.email}`);
+  }
+};
 
 const categories = [
   {
@@ -61,10 +115,7 @@ const categories = [
   },
 ];
 
-const seed = async () => {
-  await prisma.category.deleteMany();
-  await prisma.product.deleteMany();
-
+const seedCategoriesAndProducts = async () => {
   for (const category of categories) {
     const cat = await prisma.category.create({
       data: { name: category.name },
@@ -72,22 +123,71 @@ const seed = async () => {
 
     console.log(`Created category: ${cat.name}`);
 
-    for (const product of category.products) {
+    for (const [index, product] of category.products.entries()) {
+      const isPromoted = index === 0;
+
       await prisma.product.create({
         data: {
           name: product.name,
           category: { connect: { id: cat.id } },
           ceneoId: product.ceneoId.toString(),
+          isPromoted: isPromoted,
         },
       });
 
-      console.log(`Created product: ${product.name}`);
+      console.log(`Created product: ${product.name} - Promoted: ${isPromoted}`);
     }
   }
 };
 
+const seedSetups = async () => {
+  const allUsers = await prisma.user.findMany();
+  const products = await prisma.product.findMany();
+
+  if (products.length === 0) {
+    console.log("No products found for creating setups.");
+    return;
+  }
+
+  const usersWithSetups = allUsers.slice(0, 3);
+
+  for (const user of usersWithSetups) {
+    const selectedProducts = products
+      .slice(0, 3)
+      .map((product) => ({ id: product.id }));
+
+    const setup = await prisma.setup.create({
+      data: {
+        name: `Setup for ${user.email}`,
+        userId: user.id,
+        products: { connect: selectedProducts },
+      },
+    });
+
+    console.log(`Created setup: ${setup.name} for user: ${user.email}`);
+  }
+
+  const usersWithoutSetups = allUsers.slice(3);
+  usersWithoutSetups.forEach((user) => {
+    console.log(`User with no setup: ${user.email}`);
+  });
+};
+
+const seed = async () => {
+  await prisma.refreshToken.deleteMany();
+  await prisma.setup.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.product.deleteMany();
+
+  await seedCategoriesAndProducts();
+  await seedUsersAndRefreshTokens();
+  await seedSetups();
+};
+
 seed()
   .then(async () => {
+    console.log("Seeding completed.");
     await prisma.$disconnect();
   })
   .catch(async (e) => {

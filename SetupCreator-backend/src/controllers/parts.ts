@@ -62,9 +62,7 @@ router.get("/:id", async (req, res) => {
   }
 
   const { id } = input.data;
-  const product = await prisma.product.findFirst({
-    where: { id },
-  });
+  const product = await prisma.product.findUnique({ where: { id } });
 
   if (!product) {
     return res.status(404).json({ message: "Product not found" });
@@ -95,7 +93,7 @@ router.get("/:id", async (req, res) => {
  *               categoryId:
  *                 type: string
  *     responses:
- *       200:
+ *       201:
  *         description: Product successfully created.
  *       400:
  *         description: Invalid input.
@@ -138,7 +136,7 @@ router.post(
       },
     });
 
-    return res.status(200).json(product);
+    return res.status(201).json(product);
   }
 );
 

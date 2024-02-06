@@ -4,6 +4,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       DATABASE_URL: string;
+      TEST_DATABASE_URL: string;
       AUTH_SECRET: string;
       REFTESH_SECRET: string;
     }

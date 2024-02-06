@@ -27,7 +27,7 @@ const router = express.Router();
  *                 items:
  *                   type: string
  *     responses:
- *       200:
+ *       201:
  *         description: Setup successfully saved.
  *       400:
  *         description: Invalid input.
@@ -39,7 +39,7 @@ const router = express.Router();
 router.post("/save", authMiddleware(), async (req: Request, res: Response) => {
   const input = z
     .object({
-      name: z.string(),
+      name: z.string().min(1),
       products: z.array(z.string()),
     })
     .safeParse(req.body);
@@ -57,7 +57,7 @@ router.post("/save", authMiddleware(), async (req: Request, res: Response) => {
     },
   });
 
-  return res.status(200).json({ setupId: setup.id });
+  return res.status(201).json({ setupId: setup.id });
 });
 
 /**
@@ -75,7 +75,7 @@ router.post("/save", authMiddleware(), async (req: Request, res: Response) => {
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Setup successfully deleted.
  *       404:
  *         description: Setup not found.

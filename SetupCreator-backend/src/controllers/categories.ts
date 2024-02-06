@@ -29,7 +29,6 @@ router.get("/", async (req, res) => {
     return res.status(404).json({ message: "Categories not found" });
   }
 
-  console.log(categories);
   res.status(200).json(categories);
 });
 
@@ -68,7 +67,7 @@ router.get("/:id", async (req, res) => {
     include: { products: true },
   });
 
-  if (!category) {
+  if (!category || category == null) {
     return res.status(404).json({ message: "Category not found" });
   }
 
@@ -95,7 +94,7 @@ router.get("/:id", async (req, res) => {
  *             required:
  *               - name
  *     responses:
- *       200:
+ *       201:
  *         description: Successfully added a category.
  *       400:
  *         description: Invalid input.
@@ -103,6 +102,8 @@ router.get("/:id", async (req, res) => {
  *         description: Unauthorized. The user is not authenticated.
  *       403:
  *         description: Forbidden. The user does not have the required role.
+ *       409:
+ *         description: Conflict. The category already exists.
  *     security:
  *       - BearerAuth: []
  */
@@ -117,8 +118,16 @@ router.post(
     }
 
     const { name } = input.data;
+
+    const existingCategory = await prisma.category.findFirst({
+      where: { name },
+    });
+
+    if (existingCategory) {
+      return res.status(409).json({ message: "The category already exists" });
+    }
     const category = await prisma.category.create({ data: { name } });
-    return res.status(200).json(category);
+    return res.status(201).json(category);
   }
 );
 
@@ -137,7 +146,7 @@ router.post(
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Successful deletion of the category.
  *       404:
  *         description: Category not found.
@@ -168,7 +177,7 @@ router.delete(
     }
 
     const deletedCategory = await prisma.category.delete({ where: { id } });
-    return res.status(200).json(deletedCategory);
+    return res.status(204).json(deletedCategory);
   }
 );
 

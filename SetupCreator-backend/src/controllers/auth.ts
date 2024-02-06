@@ -27,7 +27,7 @@ const router = express.Router();
  *               password:
  *                 type: string
  *     responses:
- *       200:
+ *       201:
  *         description: User successfully registered.
  *       400:
  *         description: Invalid input.
@@ -61,7 +61,7 @@ router.post("/register", async (req, res) => {
     },
   });
 
-  return res.status(200).json({ message: "User successfully registered" });
+  return res.status(201).json({ message: "User successfully registered" });
 });
 
 /**
@@ -179,34 +179,34 @@ router.post("/login", async (req, res) => {
 router.post("/token", async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
-    return res.status(400).json({ message: "Refresh Token is required" });
+    return res.status(400).json({ message: "Refresh token is required" });
   }
 
-  const token = await prisma.refreshToken.findUnique({
+  const refreshTokenObj = await prisma.refreshToken.findUnique({
     where: { token: refreshToken },
   });
 
-  if (!token || token.expiresAt < new Date()) {
+  if (!refreshTokenObj || refreshTokenObj.expiresAt < new Date()) {
     return res
       .status(403)
       .json({ message: "Refresh token is invalid or has expired" });
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: token.userId },
+    where: { id: refreshTokenObj.userId },
   });
 
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
 
-  const accessToken = jwt.sign(
+  const token = jwt.sign(
     { id: user.id, role: user.role },
-    process.env.REFRESH_SECRET!,
+    process.env.AUTH_SECRET!,
     { expiresIn: "15m" }
   );
 
-  return res.status(200).json({ accessToken, refreshToken: token.token });
+  return res.status(200).json({ token, refreshToken: refreshTokenObj.token });
 });
 
 /**
