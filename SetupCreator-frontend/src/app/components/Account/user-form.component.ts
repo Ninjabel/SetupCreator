@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Token, TokenData, UserAccountDataForm} from "./domain/user-forms-types";
+import {Token, UserAccountDataForm} from "./domain/user-forms-types";
 import {PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH} from "./domain/user-forms-consts";
 import {TuiDialogContext} from "@taiga-ui/core";
 import {POLYMORPHEUS_CONTEXT} from '@tinkoff/ng-polymorpheus';
@@ -8,7 +8,6 @@ import {HttpRequestsService} from "../../core/util-services/http-requests.servic
 import {LocalstorageService} from "../../core/util-services/localstorage.service";
 import {UserLoggedStoreService} from "../../core/util-services/user-logged-store.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {jwtDecode} from 'jwt-decode';
 
 
 @Component({
@@ -76,9 +75,7 @@ export class UserFormComponent {
     }
 
     private handleSuccessAuthorization(token: Token) {
-        const userRole: TokenData = jwtDecode(token.token)
         this.localstorageService.saveData('token', token.token);
-        this.localstorageService.saveData('role', userRole.role);
         this.userLoggedStoreService.login();
         this.loading = false;
         this.changeDetectorRef.detectChanges();

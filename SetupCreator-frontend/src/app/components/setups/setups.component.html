@@ -2,7 +2,10 @@
   <div *ngIf="loading" class="w-full h-full flex justify-center items-center animate-spin">
     <span class="loader"></span>
   </div>
-  <div *ngIf="!loading" class="w-1/3 rounded-2xl border p-4 overflow-hidden">
+  <div *ngIf="!loading && emptyDatabase" class="w-1/3 rounded-2xl border p-4">
+    <h2 class="text-lg mb-4 w-full h-full flex justify-center items-center">Nie masz jeszcze zapisanych zestawów</h2>
+  </div>
+  <div *ngIf="!loading && !emptyDatabase" class="w-1/3 rounded-2xl border p-4 overflow-hidden">
     <h2 class="text-lg mb-4">Twoje zestawy:</h2>
     <tui-scrollbar class="scroll-container-height">
       <div class="w-full inline-grid grid-cols-1 gap-4 overflow-hidden">
@@ -17,7 +20,8 @@
   </div>
   <div class="w-2/3 h-full ml-4 rounded-2xl border p-4">
     <div *ngIf="!currentSetup" class="flex justify-center items-center h-full">
-      <h2 class="text-lg">Wybierz zestaw</h2>
+      <h2 *ngIf="!emptyDatabase" class="text-lg">Wybierz zestaw</h2>
+      <h2 *ngIf="emptyDatabase" class="text-lg">:(</h2>
     </div>
     <app-setup (actionFinished)="propagateChanges()" *ngIf="currentSetup" [setup]="currentSetup"></app-setup>
   </div>

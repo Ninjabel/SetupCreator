@@ -17,6 +17,8 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {NavigationEnd, Router, RouterEvent} from "@angular/router";
 import {filter, map} from "rxjs";
 import {RouterEnum, UserRole} from "../../enums/router-enum";
+import {TokenData} from "../Account/domain/user-forms-types";
+import {jwtDecode} from "jwt-decode";
 
 @Component({
     selector: 'app-header',
@@ -69,7 +71,6 @@ export class HeaderComponent implements OnInit {
 
     logout() {
         this.localstorageService.removeData('token');
-        this.localstorageService.removeData('role');
         this.userLoggedStoreService.logout();
         this.changeDetectorRef.detectChanges();
     }
@@ -84,7 +85,8 @@ export class HeaderComponent implements OnInit {
     }
 
     private updateUserRole() {
-        this.userRole = this.localstorageService.getData('role') as UserRole;
+      const userRole: TokenData = jwtDecode(this.localstorageService.getData('token')??'')
+        this.userRole =userRole.role as UserRole;
     }
 
     protected readonly UserRole = UserRole;

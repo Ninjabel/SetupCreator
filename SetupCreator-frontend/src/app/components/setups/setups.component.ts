@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {HttpRequestsService} from "../../core/util-services/http-requests.service";
 import {take} from "rxjs";
 import {Setup} from "../../interfaces/parts";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
     selector: 'app-setups',
@@ -14,6 +15,7 @@ export class SetupsComponent implements OnInit {
     loading: boolean = true;
     setups: Setup[] = [];
     currentSetup: Setup | null = null;
+    emptyDatabase: boolean = false;
 
     constructor(
         private readonly httpRequestsService: HttpRequestsService,
@@ -36,13 +38,23 @@ export class SetupsComponent implements OnInit {
     private selectSetups() {
         this.httpRequestsService.get('/setups')
             .pipe(take(1))
-            .subscribe((data: Setup[]) => {
+            .subscribe({
+              next: (data: Setup[]) => {
                 this.loading = false;
-                console.log(data)
                 this.setups = data;
-                this.isCurrentlyPickedSetupAvailable()
+                this.isCurrentlyPickedSetupAvailable();
                 this.changeDetectorRef.detectChanges();
+              },
+              error: (e: HttpErrorResponse) => {
+                if (e.status === 404){
+                  this.loading = false;
+                  this.emptyDatabase = true;
+                  this.setups = [];
+                  this.isCurrentlyPickedSetupAvailable()
+                  this.changeDetectorRef.detectChanges();
+                }}
             })
+
     }
 
 
