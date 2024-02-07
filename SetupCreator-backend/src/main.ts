@@ -3,7 +3,7 @@ import swaggerDocs from "./utils/swagger";
 
 const PORT = Number(process.env.PORT) || 3000;
 
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV == "test") {
   swaggerDocs(app, PORT);
 }
 

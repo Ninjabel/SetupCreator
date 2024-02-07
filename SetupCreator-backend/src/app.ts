@@ -5,9 +5,9 @@ import authRouter from "./controllers/auth";
 import partsRouter from "./controllers/parts";
 import setupsRouter from "./controllers/setups";
 import categoriesRouter from "./controllers/categories";
-import swaggerDocs from "./utils/swagger";
+import dotenv from "dotenv";
 
-import "dotenv/config";
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const app = express();
 

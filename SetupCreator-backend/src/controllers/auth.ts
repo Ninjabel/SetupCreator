@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import z from "zod";
 import { prisma } from "@lib/prisma";
+import { authMiddleware } from "src/middlewares/auth";
 
 const router = express.Router();
 
@@ -172,23 +173,24 @@ router.post("/login", async (req, res) => {
  *       400:
  *         description: Invalid input.
  *       401:
+ *         description: Access token is invalid or has expired.
+ *       403:
  *         description: Refresh token is invalid or has expired.
  *       404:
  *         description: User not found.
  */
-router.post("/token", async (req, res) => {
+router.post("/token", authMiddleware(), async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
     return res.status(400).json({ message: "Refresh token is required" });
   }
-
   const refreshTokenObj = await prisma.refreshToken.findUnique({
     where: { token: refreshToken },
   });
 
   if (!refreshTokenObj || refreshTokenObj.expiresAt < new Date()) {
     return res
-      .status(401)
+      .status(403)
       .json({ message: "Refresh token is invalid or has expired" });
   }
 
@@ -233,8 +235,10 @@ router.post("/token", async (req, res) => {
  *         description: User successfully log out.
  *       400:
  *         description: Invalid input.
+ *       401:
+ *         description: Unauthorized.
  */
-router.post("/logout", async (req, res) => {
+router.post("/logout", authMiddleware(), async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
     return res.status(400).json({ message: "Refresh Token is required" });
