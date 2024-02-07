@@ -2,6 +2,17 @@ import request from "supertest";
 import app from "../src/app";
 import { prisma } from "@lib/prisma";
 
+let userToken: string = "";
+
+beforeAll(async () => {
+  const userLoginResponse = await request(app).post("/auth/login").send({
+    email: "user@example.com",
+    password: "password123",
+  });
+  expect(userLoginResponse.statusCode).toBe(200);
+  userToken = userLoginResponse.body.token;
+});
+
 it("should successfully register a new user with valid email and password", async () => {
   const userData = { email: "test@example.com", password: "Password123!" };
   const response = await request(app).post("/auth/register").send(userData);
@@ -82,6 +93,7 @@ it("should refresh access token with valid refresh token", async () => {
 
   const response = await request(app)
     .post("/auth/token")
+    .set("Authorization", `Bearer ${userToken}`)
     .send({ refreshToken });
 
   expect(response.statusCode).toBe(200);
@@ -92,6 +104,7 @@ it("should refresh access token with valid refresh token", async () => {
 it("should not refresh access token with invalid refresh token", async () => {
   const response = await request(app)
     .post("/auth/token")
+    .set("Authorization", `Bearer ${userToken}`)
     .send({ refreshToken: "invalidRefreshTokenHere" });
   expect(response.statusCode).toBe(403);
   expect(response.body).toHaveProperty(
@@ -101,15 +114,18 @@ it("should not refresh access token with invalid refresh token", async () => {
 });
 
 it("should require a refresh token to refresh access token", async () => {
-  const response = await request(app).post("/auth/token").send({});
+  const response = await request(app)
+    .post("/auth/token")
+    .set("Authorization", `Bearer ${userToken}`)
+    .send({});
   expect(response.statusCode).toBe(400);
   expect(response.body).toHaveProperty("message", "Refresh token is required");
 });
 
-it("should allow logout without access token", async () => {
+it("should not allow logout without access token", async () => {
   const response = await request(app).post("/auth/logout");
-  expect(response.statusCode).toBe(400);
-  expect(response.body).toHaveProperty("message", "Refresh Token is required");
+  expect(response.statusCode).toBe(401);
+  expect(response.body).toHaveProperty("message", "Unauthorized");
 });
 
 const getRefreshTokenForUser = async (email: string) => {

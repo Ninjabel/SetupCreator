@@ -2,7 +2,8 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  roots: ["<rootDir>/test"],
+  roots: ["<rootDir>"],
+  modulePaths: ["<rootDir>"],
   testMatch: ["**/*.test.ts"],
   // detectOpenHandles: true,
   moduleNameMapper: {
