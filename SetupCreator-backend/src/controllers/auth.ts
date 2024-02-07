@@ -171,7 +171,7 @@ router.post("/login", async (req, res) => {
  *         description: Successfully generated new access token.
  *       400:
  *         description: Invalid input.
- *       403:
+ *       401:
  *         description: Refresh token is invalid or has expired.
  *       404:
  *         description: User not found.
@@ -188,7 +188,7 @@ router.post("/token", async (req, res) => {
 
   if (!refreshTokenObj || refreshTokenObj.expiresAt < new Date()) {
     return res
-      .status(403)
+      .status(401)
       .json({ message: "Refresh token is invalid or has expired" });
   }
 
