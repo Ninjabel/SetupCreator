@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { Role } from "@prisma/client";
 
@@ -29,6 +29,12 @@ export const authMiddleware =
       req.app.locals.userRole = payload.role;
       next();
     } catch (err) {
-      return res.status(401).json({ message: "Unauthorized" });
+      if (err instanceof TokenExpiredError) {
+        return res
+          .status(401)
+          .json({ message: "Session expired, please log in again" });
+      } else {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
     }
   };
