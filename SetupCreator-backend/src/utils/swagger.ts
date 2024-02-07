@@ -19,7 +19,87 @@ const options: swaggerJsdoc.Options = {
           bearerFormat: "JWT",
         },
       },
+      schemas: {
+        User: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            email: { type: "string" },
+            password: { type: "string" },
+            role: { $ref: "#/components/schemas/Role" },
+            setups: {
+              type: "array",
+              items: { $ref: "#/components/schemas/Setup" },
+            },
+            refreshTokens: {
+              type: "array",
+              items: { $ref: "#/components/schemas/RefreshToken" },
+            },
+          },
+        },
+        RefreshToken: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            token: { type: "string" },
+            userId: { type: "string" },
+            user: { $ref: "#/components/schemas/User" },
+            expiresAt: { type: "string", format: "date-time" },
+            createdAt: { type: "string", format: "date-time" },
+          },
+        },
+        Category: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            name: { type: "string" },
+            products: {
+              type: "array",
+              items: { $ref: "#/components/schemas/Product" },
+            },
+          },
+        },
+        Setup: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            name: { type: "string" },
+            user: { $ref: "#/components/schemas/User" },
+            userId: { type: "string" },
+            products: {
+              type: "array",
+              items: { $ref: "#/components/schemas/Product" },
+            },
+            productIds: { type: "array", items: { type: "string" } },
+          },
+        },
+        Product: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            name: { type: "string" },
+            category: { $ref: "#/components/schemas/Category" },
+            categoryId: { type: "string" },
+            setups: {
+              type: "array",
+              items: { $ref: "#/components/schemas/Setup" },
+            },
+            setupIds: { type: "array", items: { type: "string" } },
+            ceneoId: { type: "string" },
+            photoUrl: { type: "string" },
+            price: { type: "integer" },
+            shopUrl: { type: "string" },
+            shopImage: { type: "string" },
+            isPromoted: { type: "boolean" },
+          },
+        },
+        Role: {
+          type: "string",
+          enum: ["USER", "ADMIN"],
+        },
+      },
     },
+
     security: [
       {
         BearerAuth: ["BearerAuth"],
