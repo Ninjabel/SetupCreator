@@ -1,31 +1,59 @@
-# Setup creator
+# SetupCreator backend
+
+## Commands
 
 Install dependencies
+
 ```
-pnpm install
+npm install
 ```
 
 Generate prisma client
+
 ```
-pnpm prisma generate
+npx prisma generate
 ```
 
 Seed database (optional)
-```
-pnpm prisma db seed
-```
 
-Start dev server
 ```
-pnpm run dev
+npm run seed
 ```
 
 Start server
+
 ```
-pnpm start
+npm start
 ```
 
-Open prisma studio
+Open database preview (Prisma Studio)
+
 ```
-pnpm prisma studio
+npm run studio
+```
+
+### Dev/Test
+
+Run development server
+
+```
+npm run dev
+```
+
+Seed test database
+
+```
+npm run test:seed
+```
+
+Open database preview (Prisma Studio)
+
+```
+npm run studio
+```
+
+Run tests
+
+```
+npm test
 ```
