@@ -1,10 +1,19 @@
-import cheerio, { Cheerio } from "cheerio";
+import cheerio, { Cheerio, CheerioAPI } from "cheerio";
 
-export const scrapProductDetails = async (ceneoId: string) => {
+interface ProductDetails {
+  price: number | null;
+  image: string | null;
+  summaryShopUrl: string;
+  summaryShopImage: string;
+}
+
+export const scrapProductDetails = async (
+  ceneoId: string
+): Promise<ProductDetails> => {
   const req: Response = await fetch(`https://www.ceneo.pl/${ceneoId}`);
   const html: string = await req.text();
 
-  const page = cheerio.load(html);
+  const page: CheerioAPI = cheerio.load(html);
   const priceMetaVal: string | undefined = page(
     'meta[property="product:price:amount"]'
   )?.attr("content");
