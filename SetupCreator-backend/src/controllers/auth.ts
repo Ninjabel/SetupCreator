@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt, { Jwt } from "jsonwebtoken";
 import z from "zod";
 import { prisma } from "@lib/prisma";
 import { authMiddleware } from "src/middlewares/auth";
@@ -117,14 +117,14 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  const token = jwt.sign(
+  const token: string = jwt.sign(
     { id: user.id, role: user.role },
     process.env.AUTH_SECRET!,
-    { expiresIn: "15m" }
+    { expiresIn: "30m" }
   );
 
-  const refreshToken = jwt.sign(
-    { id: user.id, role: user.role },
+  const refreshToken: string = jwt.sign(
+    { id: user.id },
     process.env.REFRESH_SECRET!
   );
 
@@ -202,10 +202,10 @@ router.post("/token", authMiddleware(), async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  const token = jwt.sign(
+  const token: string = jwt.sign(
     { id: user.id, role: user.role },
     process.env.AUTH_SECRET!,
-    { expiresIn: "15m" }
+    { expiresIn: "30m" }
   );
 
   return res.status(200).json({ token, refreshToken: refreshTokenObj.token });
