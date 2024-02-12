@@ -1,21 +1,28 @@
-import request from "supertest";
+import request, { Response } from "supertest";
 import app from "../src/app";
 import { prisma } from "@lib/prisma";
 
 let userToken: string = "";
 
 beforeAll(async () => {
-  const userLoginResponse = await request(app).post("/auth/login").send({
-    email: "user@example.com",
-    password: "password123",
-  });
+  const userLoginResponse: Response = await request(app)
+    .post("/auth/login")
+    .send({
+      email: "user@example.com",
+      password: "password123",
+    });
   expect(userLoginResponse.statusCode).toBe(200);
   userToken = userLoginResponse.body.token;
 });
 
-it("should successfully register a new user with valid email and password", async () => {
-  const userData = { email: "test@example.com", password: "Password123!" };
-  const response = await request(app).post("/auth/register").send(userData);
+it("should successfully register a new user with valid email and password", async (): Promise<void> => {
+  const userData: { email: string; password: string } = {
+    email: "test@example.com",
+    password: "Password123!",
+  };
+  const response: Response = await request(app)
+    .post("/auth/register")
+    .send(userData);
   expect(response.statusCode).toBe(201);
   expect(response.body).toHaveProperty(
     "message",
@@ -23,9 +30,14 @@ it("should successfully register a new user with valid email and password", asyn
   );
 });
 
-it("should not allow registration with an email that already exists", async () => {
-  const userData = { email: "user@example.com", password: "Password123!" };
-  const response = await request(app).post("/auth/register").send(userData);
+it("should not allow registration with an email that already exists", async (): Promise<void> => {
+  const userData: { email: string; password: string } = {
+    email: "user@example.com",
+    password: "Password123!",
+  };
+  const response: Response = await request(app)
+    .post("/auth/register")
+    .send(userData);
   expect(response.statusCode).toBe(409);
   expect(response.body).toHaveProperty("message", "User already exists");
 });
