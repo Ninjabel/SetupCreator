@@ -14,6 +14,7 @@ beforeAll(async () => {
   adminToken = adminLoginResponse.body.token;
 });
 
+// GET /categories/
 it("should retrieve all categories for user", async () => {
   const response = await request(app).get("/categories");
   expect(response.statusCode).toBe(200);
@@ -21,6 +22,7 @@ it("should retrieve all categories for user", async () => {
   expect(response.body.length).toBeGreaterThan(0);
 });
 
+// GET /categories/id
 it("should retrieve details of an existing category", async () => {
   const categoryName = "Procesory";
   const categoryId = await findCategoryIdByName(categoryName);
@@ -36,6 +38,14 @@ it("should return 404 for a non-existing category", async () => {
   expect(response.body).toHaveProperty("message", "Category not found");
 });
 
+it("should return 400 for get category with invalid ID format", async () => {
+  const invalidId: string = "99999999999999999999999999";
+  const response = await request(app).get(`/categories/${invalidId}`);
+  expect(response.statusCode).toBe(400);
+  expect(response.body).toHaveProperty("message", "Invalid input");
+});
+
+// POST /categories/
 it("should allow creating a new category with valid data", async () => {
   const newCategory = { name: "New Test Category" };
   const response = await request(app)
@@ -57,6 +67,21 @@ it("should not allow creating a category without a name", async () => {
   expect(response.body).toHaveProperty("message", "Invalid input");
 });
 
+it("should return 409 if category already exists", async () => {
+  const newCategory = { name: "Procesory" };
+  const response = await request(app)
+    .post("/categories")
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send(newCategory);
+
+  expect(response.statusCode).toBe(409);
+  expect(response.body).toHaveProperty(
+    "message",
+    "The category already exists"
+  );
+});
+
+// DELETE /categories/id
 it("should allow deleting an existing category", async () => {
   const categoryName = "Obudowy";
   const categoryId = await findCategoryIdByName(categoryName);
@@ -73,6 +98,15 @@ it("should return 404 when trying to delete a non-existing category", async () =
     .set("Authorization", `Bearer ${adminToken}`);
   expect(response.statusCode).toBe(404);
   expect(response.body).toHaveProperty("message", "Category not found");
+});
+
+it("should return 400 for get category with invalid ID format", async () => {
+  const invalidId: string = "99999999999999999999999999";
+  const response = await request(app)
+    .delete(`/categories/${invalidId}`)
+    .set("Authorization", `Bearer ${adminToken}`);
+  expect(response.statusCode).toBe(400);
+  expect(response.body).toHaveProperty("message", "Invalid input");
 });
 
 const findCategoryIdByName = async (categoryName: string) => {

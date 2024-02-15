@@ -15,6 +15,7 @@ beforeAll(async () => {
   userToken = userLoginResponse.body.token;
 });
 
+// POST /auth/register
 it("should successfully register a new user with valid email and password", async (): Promise<void> => {
   const userData: { email: string; password: string } = {
     email: "test@example.com",
@@ -60,6 +61,7 @@ it("should not allow registration with invalid email format", async () => {
   expect(response.statusCode).toBe(400);
 });
 
+// POST /auth/login
 it("should authenticate user with valid credentials", async () => {
   const userData = { email: "user@example.com", password: "password123" };
   const response = await request(app).post("/auth/login").send(userData);
@@ -98,7 +100,7 @@ it("should not authenticate user without an email", async () => {
   expect(response.statusCode).toBe(400);
   expect(response.body).toHaveProperty("message", "Invalid input");
 });
-
+// POST /auth/token
 it("should refresh access token with valid refresh token", async () => {
   const email = "user@example.com";
   const refreshToken = await getRefreshTokenForUser(email);
@@ -134,10 +136,20 @@ it("should require a refresh token to refresh access token", async () => {
   expect(response.body).toHaveProperty("message", "Refresh token is required");
 });
 
+// POST /auth/logout
 it("should not allow logout without access token", async () => {
   const response = await request(app).post("/auth/logout");
   expect(response.statusCode).toBe(401);
   expect(response.body).toHaveProperty("message", "Unauthorized");
+});
+
+it("should allow logout without access token", async () => {
+  const response = await request(app)
+    .post("/auth/logout")
+    .set("Authorization", `Bearer ${userToken}`)
+    .send();
+  expect(response.statusCode).toBe(400);
+  expect(response.body).toHaveProperty("message", "Refresh Token is required");
 });
 
 const getRefreshTokenForUser = async (email: string) => {
