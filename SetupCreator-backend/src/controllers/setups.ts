@@ -90,11 +90,16 @@ router.delete(
   "/delete/:id",
   authMiddleware(),
   async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const schema = z.object({
+      id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID format"),
+    });
 
-    if (!id) {
+    const result = schema.safeParse(req.params);
+
+    if (!result.success) {
       return res.status(400).json({ message: "Invalid input" });
     }
+    const { id } = result.data;
 
     const setup = await prisma.setup.findFirst({
       where: { id, userId: req.app.locals.userId },
@@ -105,7 +110,7 @@ router.delete(
     }
 
     const deletedSetup = await prisma.setup.delete({ where: { id } });
-    return res.status(200).json({ setupId: deletedSetup.id });
+    return res.status(204).json({ setupId: deletedSetup.id });
   }
 );
 

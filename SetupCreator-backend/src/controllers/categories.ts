@@ -55,7 +55,9 @@ router.get("/", async (req, res) => {
  *         description: Invalid input.
  */
 router.get("/:id", async (req, res) => {
-  const input = z.object({ id: z.string() }).safeParse(req.params);
+  const input = z
+    .object({ id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID format") })
+    .safeParse(req.params);
 
   if (!input.success) {
     return res.status(400).json({ message: "Invalid input" });
@@ -163,7 +165,11 @@ router.delete(
   "/:id",
   authMiddleware({ requiredRole: "ADMIN" }),
   async (req, res) => {
-    const input = z.object({ id: z.string() }).safeParse(req.params);
+    const input = z
+      .object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID format"),
+      })
+      .safeParse(req.params);
 
     if (!input.success) {
       return res.status(400).json({ message: "Invalid input" });

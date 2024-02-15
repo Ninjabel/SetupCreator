@@ -55,7 +55,9 @@ router.get("/", async (req, res) => {
  *         description: Invalid input.
  */
 router.get("/:id", async (req, res) => {
-  const input = z.object({ id: z.string() }).safeParse(req.params);
+  const input = z
+    .object({ id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID format") })
+    .safeParse(req.params);
 
   if (!input.success) {
     return res.status(400).json({ message: "Invalid input" });
@@ -155,7 +157,7 @@ router.post(
  *         schema:
  *           type: string
  *     responses:
- *       200:
+ *       204:
  *         description: Product successfully deleted.
  *       404:
  *         description: Product not found.
@@ -172,7 +174,11 @@ router.delete(
   "/:id",
   authMiddleware({ requiredRole: "ADMIN" }),
   async (req, res) => {
-    const input = z.object({ id: z.string() }).safeParse(req.params);
+    const input = z
+      .object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID format"),
+      })
+      .safeParse(req.params);
 
     if (!input.success) {
       return res.status(400).json({ message: "Invalid input" });
@@ -186,7 +192,7 @@ router.delete(
     }
 
     await prisma.product.delete({ where: { id } });
-    return res.status(200).json({ productId: product.id });
+    return res.status(204).json({ productId: product.id });
   }
 );
 
@@ -279,7 +285,11 @@ router.post(
   "/promote/:id",
   authMiddleware({ requiredRole: "ADMIN" }),
   async (req, res) => {
-    const input = z.object({ id: z.string() }).safeParse(req.params);
+    const input = z
+      .object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID format"),
+      })
+      .safeParse(req.params);
 
     if (!input.success) {
       return res.status(400).json({ message: "Invalid input" });
@@ -329,7 +339,11 @@ router.post(
   "/unpromote/:id",
   authMiddleware({ requiredRole: "ADMIN" }),
   async (req, res) => {
-    const input = z.object({ id: z.string() }).safeParse(req.params);
+    const input = z
+      .object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ID format"),
+      })
+      .safeParse(req.params);
 
     if (!input.success) {
       return res.status(400).json({ message: "Invalid input" });
