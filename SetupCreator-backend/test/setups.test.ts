@@ -33,7 +33,6 @@ beforeAll(async () => {
 // POST /setups/save
 it("should allow saving a new setup with valid data", async () => {
   const selectedProductIds = await selectOneProductPerCategory();
-  console.log(selectedProductIds);
 
   const newSetup = {
     name: "New Test Setup",
