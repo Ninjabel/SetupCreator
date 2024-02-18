@@ -24,6 +24,7 @@ services:
     depends_on:
       - prometheus
     ports:
+      # PORT 3000 is already reserved for backend
       - "3030:3000"
     networks:
       - monitor-net
