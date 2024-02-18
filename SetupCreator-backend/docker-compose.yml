@@ -1,5 +1,14 @@
 version: "3.7"
 services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=prod
+    networks:
+      - monitor-net
+
   prometheus:
     image: prom/prometheus:v2.49.1
     volumes:
@@ -24,7 +33,7 @@ services:
     depends_on:
       - prometheus
     ports:
-      # PORT 3000 is already reserved for backend
+      # Port 3000 is already reserved for app
       - "3030:3000"
     networks:
       - monitor-net
